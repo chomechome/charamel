@@ -9,7 +9,7 @@ import logging
 import sys
 import time
 import warnings
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import cchardet
 import chardet
@@ -22,20 +22,32 @@ from tests.fixtures import iter_fixtures
 from tests.utils import is_correct_encoding
 
 LOGGER = logging.getLogger('benchmark')
-CHARAMEL = charamel.Detector()
+
+CHARAMEL_DETECTOR = charamel.Detector()
 
 DOUBLE_LINE = termcolor.colored('=' * 80, 'blue')
 TOTAL = 'Total'
 ASTERISK = ' *'
 
+
+def _get_detector_name(module: Any) -> str:
+    name = '-'.join(word.capitalize() for word in module.__name__.split('_'))
+    return f'{name} v{module.__version__}'
+
+
+CHARDET = _get_detector_name(chardet)
+C_CHARDET = _get_detector_name(cchardet)
+CHARSET_NORMALIZER = _get_detector_name(charset_normalizer)
+CHARAMEL = _get_detector_name(charamel)
+
 DETECTORS = {
-    'Chardet': lambda c: chardet.detect(c)['encoding'],
-    'CChardet': lambda c: cchardet.detect(c)['encoding'],
-    'Charset-Normalizer': lambda c: charset_normalizer.detect(c)['encoding'],
-    'Charamel': lambda c: CHARAMEL.detect(c),
+    CHARDET: lambda c: chardet.detect(c)['encoding'],
+    C_CHARDET: lambda c: cchardet.detect(c)['encoding'],
+    CHARSET_NORMALIZER: lambda c: charset_normalizer.detect(c)['encoding'],
+    CHARAMEL: lambda c: CHARAMEL_DETECTOR.detect(c),
 }
 SUPPORTED_ENCODINGS = {
-    'Chardet': {
+    CHARDET: {
         charamel.Encoding.ASCII,
         charamel.Encoding.UTF_8,
         charamel.Encoding.UTF_16,
@@ -65,7 +77,7 @@ SUPPORTED_ENCODINGS = {
         charamel.Encoding.CP_1255,
         charamel.Encoding.TIS_620,
     },
-    'CChardet': {
+    C_CHARDET: {
         charamel.Encoding.UTF_8,
         charamel.Encoding.UTF_16_BE,
         charamel.Encoding.UTF_16_LE,
@@ -162,7 +174,7 @@ SUPPORTED_ENCODINGS = {
         charamel.Encoding.CP_1250,
         charamel.Encoding.CP_852,
     },
-    'Charset-Normalizer': {
+    CHARSET_NORMALIZER: {
         charamel.Encoding.ASCII,
         charamel.Encoding.BIG_5,
         charamel.Encoding.BIG_5_HKSCS,
@@ -253,7 +265,7 @@ SUPPORTED_ENCODINGS = {
         charamel.Encoding.UTF_7,
         charamel.Encoding.UTF_8,
     },
-    'Charamel': set(charamel.Encoding),
+    CHARAMEL: set(charamel.Encoding),
 }
 
 
@@ -340,7 +352,7 @@ def main():
     LOGGER.info(DOUBLE_LINE)
     LOGGER.info(termcolor.colored('Encoding detector benchmark'.center(80), 'blue'))
     LOGGER.info(DOUBLE_LINE)
-    fixtures = list(iter_fixtures())
+    fixtures = list(iter_fixtures())[:10]
 
     times = collections.defaultdict(list)
     hits = collections.defaultdict(collections.Counter)
