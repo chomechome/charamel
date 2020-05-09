@@ -352,7 +352,7 @@ def main():
     LOGGER.info(DOUBLE_LINE)
     LOGGER.info(termcolor.colored('Encoding detector benchmark'.center(80), 'blue'))
     LOGGER.info(DOUBLE_LINE)
-    fixtures = list(iter_fixtures())[:10]
+    fixtures = list(iter_fixtures())
 
     times = collections.defaultdict(list)
     hits = collections.defaultdict(collections.Counter)

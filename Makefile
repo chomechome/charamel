@@ -25,4 +25,4 @@ coverage:
 
 benchmark:
 	poetry install --extras=benchmark
-	$(VENV) python benchmark.py
+	$(VENV) python scripts/benchmark.py
