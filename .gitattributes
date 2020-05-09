@@ -1,2 +1,6 @@
-'*.gzip' filter=lfs diff=lfs merge=lfs -text
-'tests/fixtures/*/**' filter=lfs diff=lfs merge=lfs -text
+*.gzip filter=lfs diff=lfs merge=lfs -text
+*.txt filter=lfs diff=lfs merge=lfs -text
+*.xml filter=lfs diff=lfs merge=lfs -text
+*.html filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.srt filter=lfs diff=lfs merge=lfs -text
