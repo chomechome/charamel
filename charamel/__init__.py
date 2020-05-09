@@ -4,8 +4,8 @@ Charamel: Fast Universal Encoding Detection, Unicode-Flavoured 🍭
 
 Usage:
     >>> import charamel
-    >>> content = b'El espa\xf1ol o castellano del lat\xedn hablado'
     >>> detector = charamel.Detector()
+    >>> content = b'El espa\xf1ol o castellano del lat\xedn hablado'
     >>> encoding = detector.detect(content)
     >>> encoding
     <Encoding.ISO_8859_14: 'iso8859_14'>
