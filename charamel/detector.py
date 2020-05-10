@@ -40,9 +40,7 @@ class Detector:
 
     def __init__(
         self,
-        encodings: Sequence[Encoding] = tuple(
-            x for x in Encoding if x != Encoding.TIS_620
-        ),
+        encodings: Sequence[Encoding] = tuple(Encoding),
         min_confidence: float = 0.0,
     ):
         """
