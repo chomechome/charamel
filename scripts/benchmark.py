@@ -6,10 +6,11 @@ Licensed under Apache 2.0
 """
 import collections
 import logging
+import statistics
 import sys
 import time
 import warnings
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 import cchardet
 import chardet
@@ -309,8 +310,8 @@ def create_detector_metrics(times: Dict[str, List[float]], hits) -> str:
     headers = [
         'Detector',
         'Supported Encodings',
-        'Seconds / File',
-        'Files / Second',
+        'Seconds / File (Mean)',
+        'Seconds / File (95%)',
         'Accuracy',
         'Accuracy (Supported Encodings)',
     ]
@@ -318,8 +319,8 @@ def create_detector_metrics(times: Dict[str, List[float]], hits) -> str:
 
     total = sum(statistic[TOTAL] for statistic in hits.values())
     for detector in DETECTORS:
-        seconds_per_file = sum(times[detector]) / len(times[detector])
-        files_per_second = 1 / seconds_per_file
+        seconds_per_file_mean = statistics.mean(times[detector])
+        seconds_per_file_95 = sorted(times[detector])[int(0.95 * len(times[detector]))]
         correct = sum(statistic[detector] for statistic in hits.values())
         total_supported = sum(
             statistic[TOTAL]
@@ -335,8 +336,8 @@ def create_detector_metrics(times: Dict[str, List[float]], hits) -> str:
             [
                 detector,
                 len(SUPPORTED_ENCODINGS[detector]),
-                round(seconds_per_file, 6),
-                round(files_per_second),
+                round(seconds_per_file_mean, 6),
+                round(seconds_per_file_95, 6),
                 format_percent(correct, total),
                 format_percent(correct_supported, total_supported),
             ]
