@@ -93,6 +93,15 @@ def test_decode(detector, text, encoding):
     assert is_correct_encoding(content, encoding, text)
 
 
+@pytest.mark.parametrize(
+    ('content', 'expected'),
+    [b'\xc4\xe3\xba\xc3', {Encoding.GB_K, Encoding.GB_2312, Encoding.GB_18030}]
+)
+def test_probe(detector, content, expected):
+    probes = detector.probe(content)
+    assert {enc for enc, _ in probes} == expected
+
+
 _KNOWN_FAILURES = {
     FIXTURE_DIRECTORY / 'big5' / 'coolloud.org.tw.xml',
     FIXTURE_DIRECTORY / 'big5' / 'upsaid.com.xml',
