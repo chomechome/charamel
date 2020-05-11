@@ -80,7 +80,6 @@ To get multiple likely encodings along with confidences in range `[0, 1]`, use `
 
 .. code-block:: python
 
-    >>> from charamel import Detector, Encoding
     >>> detector = Detector(encodings=[Encoding.UTF_8, Encoding.BIG_5])
 
 Another useful `Detector` parameter is `min_confidence`. Basically, this parameter regulates how conservative the `Detector` will be.
@@ -88,7 +87,6 @@ Confidence for encodings that are returned by `detect` and `probe` methods must 
 
 .. code-block:: python
 
-    >>> from charamel import Detector, Encoding
     >>> detector = Detector(min_confidence=0.5)
 
 If no encoding confidences exceed `min_confidence`, `detect` will return `None` and `probe` will return an empty list.
