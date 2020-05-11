@@ -16,5 +16,4 @@ cache: pip
 
 script:
   - "make lint"
-  - "make test"
   - "make coverage"
