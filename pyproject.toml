@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "charamel"
-version = "0.1.0"
-description = "Fast Encoding Detection in Python, Unicode-Flavoured 🍭"
+version = "1.0.0"
+description = "🌏 Truly Universal Encoding Detection in Python 🌎"
 authors = ["Vladislav Blinov <cunningplan@yandex.ru>"]
 repository = "https://github.com/chomechome/charamel"
 readme = "README.rst"
@@ -25,7 +25,6 @@ tabulate = {version = "^0.8.7", optional = true}
 [tool.poetry.dev-dependencies]
 pytest = "^5.2.2"
 pytest-cov = "^2.8.1"
-pytest-xdist = "^1.30.0"
 mypy = "^0.740"
 flake8 = "^3.7.9"
 flake8-isort = "^2.7.0"

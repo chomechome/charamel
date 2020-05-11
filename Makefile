@@ -17,7 +17,7 @@ lint:
 	$(VENV) mypy $(CODE)
 
 test:
-	$(VENV) pytest -n auto --boxed tests
+	$(VENV) pytest tests
 
 coverage:
 	$(VENV) pytest --cov=charamel

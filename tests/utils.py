@@ -1,11 +1,13 @@
 """
-Charamel: Fast Universal Encoding Detection, Unicode-Flavoured 🍭
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+🌏 Charamel: Truly Universal Encoding Detection in Python 🌎
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Licensed under Apache 2.0
 """
 import re
 from typing import Optional
+
+import pytest
 
 from charamel import Encoding
 
@@ -62,3 +64,17 @@ def is_correct_encoding(
         return normalize(actual) == normalize(expected)
     except ValueError:
         return False
+
+
+def skip(*values, reason: str = ''):
+    """
+    Skip `pytest.mark.parametrize` test item
+
+    Args:
+        values: Test item arguments
+        reason: Reason to skip this item
+
+    Returns:
+        Skipped test item
+    """
+    return pytest.param(*values, marks=pytest.mark.skip(reason=reason))

@@ -1,6 +1,6 @@
 """
-Charamel: Fast Universal Encoding Detection, Unicode-Flavoured 🍭
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+🌏 Charamel: Truly Universal Encoding Detection in Python 🌎
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Licensed under Apache 2.0
 """
@@ -87,7 +87,7 @@ class Detector:
 
     def detect(self, content: bytes) -> Optional[Encoding]:
         """
-        Detect most likely encoding for given byte content
+        Detect the most probable encoding for given byte content
 
         Args:
             content: Encoded text
@@ -109,7 +109,7 @@ class Detector:
 
     def probe(self, content: bytes, top: int = 3) -> List[Tuple[Encoding, float]]:
         """
-        Detect `top` likely encodings with confidences
+        Detect `top` probable encodings with confidences
 
         Args:
             content: Encoded text

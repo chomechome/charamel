@@ -1,16 +1,15 @@
 """
-Charamel: Fast Universal Encoding Detection, Unicode-Flavoured 🍭
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+🌏 Charamel: Truly Universal Encoding Detection in Python 🌎
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Licensed under Apache 2.0
 """
 import collections
 import logging
-import statistics
 import sys
 import time
 import warnings
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterator, List, Tuple
 
 import cchardet
 import chardet
@@ -24,11 +23,26 @@ from tests.utils import is_correct_encoding
 
 LOGGER = logging.getLogger('benchmark')
 
-CHARAMEL_DETECTOR = charamel.Detector()
-
 DOUBLE_LINE = termcolor.colored('=' * 80, 'blue')
 TOTAL = 'Total'
 ASTERISK = ' *'
+TIME_PERCENTILE = 0.99
+
+
+def _format_percent(count: float, total: float) -> str:
+    return f'{round(100 * count / total)}%'
+
+
+METRIC_HEADERS = (
+    'Detector',
+    'Supported Encodings',
+    'Sec / File (Mean)',
+    f'Sec / File ({_format_percent(TIME_PERCENTILE, 1)})',
+    'Sec / File (Max)',
+    'KB / Sec',
+    'Accuracy',
+    'Accuracy on Supported',
+)
 
 
 def _get_detector_name(module: Any) -> str:
@@ -45,7 +59,7 @@ DETECTORS = {
     CHARDET: lambda c: chardet.detect(c)['encoding'],
     C_CHARDET: lambda c: cchardet.detect(c)['encoding'],
     CHARSET_NORMALIZER: lambda c: charset_normalizer.detect(c)['encoding'],
-    CHARAMEL: lambda c: CHARAMEL_DETECTOR.detect(c),
+    CHARAMEL: charamel.Detector().detect,
 }
 SUPPORTED_ENCODINGS = {
     CHARDET: {
@@ -270,18 +284,14 @@ SUPPORTED_ENCODINGS = {
 }
 
 
-def format_percent(count: int, total: int) -> str:
-    return f'{round(100 * count / total)}%'
-
-
-def create_encoding_accuracy_breakdown(hits: Dict[str, Dict[str, int]]) -> str:
+def _create_encoding_accuracy_breakdown(hits: Dict[str, Dict[str, int]]) -> str:
     headers = ['Encoding', TOTAL, *DETECTORS]
     breakdown = []
 
     for encoding, statistic in sorted(hits.items()):
         line = [encoding]
         total = statistic[TOTAL]
-        line.append(total)
+        line.append(str(total))
         for detector in DETECTORS:
             count = statistic[detector]
             if encoding not in SUPPORTED_ENCODINGS[detector]:
@@ -298,7 +308,7 @@ def create_encoding_accuracy_breakdown(hits: Dict[str, Dict[str, int]]) -> str:
                 color = 'red'
             line.append(
                 termcolor.colored(
-                    f'{count} ({format_percent(count, total)}){asterisk}', color
+                    f'{count} ({_format_percent(count, total)}){asterisk}', color
                 )
             )
         breakdown.append(line)
@@ -306,82 +316,91 @@ def create_encoding_accuracy_breakdown(hits: Dict[str, Dict[str, int]]) -> str:
     return tabulate.tabulate(breakdown, headers, tablefmt='grid')
 
 
-def create_detector_metrics(times: Dict[str, List[float]], hits) -> str:
-    headers = [
-        'Detector',
-        'Supported Encodings',
-        'Seconds / File (Mean)',
-        'Seconds / File (95%)',
-        'Accuracy',
-        'Accuracy (Supported Encodings)',
-    ]
+def _create_detector_metrics(
+    times: Dict[str, List[float]], sizes: List[int], hits: Dict[str, Dict[str, int]]
+) -> str:
     breakdown = []
 
-    total = sum(statistic[TOTAL] for statistic in hits.values())
+    total_kilobytes = sum(sizes) / 1000
+    total_tests = sum(statistic[TOTAL] for statistic in hits.values())
     for detector in DETECTORS:
-        seconds_per_file_mean = statistics.mean(times[detector])
-        seconds_per_file_95 = sorted(times[detector])[int(0.95 * len(times[detector]))]
-        correct = sum(statistic[detector] for statistic in hits.values())
-        total_supported = sum(
+        detector_times = sorted(times[detector])
+        total_time = sum(times[detector])
+        correct_tests = sum(statistic[detector] for statistic in hits.values())
+        total_supported_tests = sum(
             statistic[TOTAL]
             for encoding, statistic in hits.items()
             if encoding in SUPPORTED_ENCODINGS[detector]
         )
-        correct_supported = sum(
+        correct_supported_tests = sum(
             statistic[detector]
             for encoding, statistic in hits.items()
             if encoding in SUPPORTED_ENCODINGS[detector]
+        )
+        total_accuracy = _format_percent(correct_tests, total_tests)
+        supported_accuracy = _format_percent(
+            correct_supported_tests, total_supported_tests
         )
         breakdown.append(
             [
                 detector,
                 len(SUPPORTED_ENCODINGS[detector]),
-                round(seconds_per_file_mean, 6),
-                round(seconds_per_file_95, 6),
-                format_percent(correct, total),
-                format_percent(correct_supported, total_supported),
+                round(total_time / len(detector_times), 6),
+                round(detector_times[int(TIME_PERCENTILE * len(detector_times))], 6),
+                round(max(detector_times), 6),
+                round(total_kilobytes / total_time),
+                total_accuracy,
+                supported_accuracy,
             ]
         )
 
-    return tabulate.tabulate(breakdown, headers, tablefmt='grid')
+    return tabulate.tabulate(breakdown, METRIC_HEADERS, tablefmt='grid')
+
+
+def _run_detectors(content: bytes, expected: str) -> Iterator[Tuple[str, float, bool]]:
+    for detector, detect in DETECTORS.items():
+        start = time.time()
+        detected = detect(content)
+        end = time.time()
+        yield detector, end - start, is_correct_encoding(content, detected, expected)
 
 
 def main():
+    """
+    Run benchmark on all test fixtures
+    """
     logging.basicConfig(format='%(message)s', level=logging.INFO, stream=sys.stdout)
     warnings.simplefilter('ignore', UserWarning)
 
     LOGGER.info(DOUBLE_LINE)
     LOGGER.info(termcolor.colored('Encoding detector benchmark'.center(80), 'blue'))
     LOGGER.info(DOUBLE_LINE)
-    fixtures = list(iter_fixtures())
 
+    fixtures = list(iter_fixtures())
+    sizes = []
     times = collections.defaultdict(list)
     hits = collections.defaultdict(collections.Counter)
-    total = len(fixtures)
-
     for i, (path, encoding) in enumerate(fixtures, start=1):
         hits[encoding][TOTAL] += 1
         content = path.read_bytes()
+        sizes.append(len(content))
         expected = content.decode(encoding)
-        for detector, detect in DETECTORS.items():
-            start = time.time()
-            detected = detect(content)
-            end = time.time()
-            times[detector].append(end - start)
-            hits[encoding][detector] += is_correct_encoding(content, detected, expected)
-
-        LOGGER.info(
-            f'{path} {termcolor.colored("[" + format_percent(i, total) + "]", "yellow")}'
+        for detector, elapsed, is_correct in _run_detectors(content, expected):
+            times[detector].append(elapsed)
+            hits[encoding][detector] += is_correct
+        file_percent = termcolor.colored(
+            f'[{_format_percent(i, len(fixtures))}]', 'yellow'
         )
+        LOGGER.info('%s %s', path, file_percent)
 
     LOGGER.info(DOUBLE_LINE)
-    for line in create_detector_metrics(times, hits).splitlines():
+    for line in _create_detector_metrics(times, sizes, hits).splitlines():
         LOGGER.info(line)
 
     LOGGER.info(DOUBLE_LINE)
-    for line in create_encoding_accuracy_breakdown(hits).splitlines():
+    for line in _create_encoding_accuracy_breakdown(hits).splitlines():
         LOGGER.info(line)
-    LOGGER.info(f'{ASTERISK} - not officially supported for detector')
+    LOGGER.info('%s - not officially supported for detector', ASTERISK)
 
 
 if __name__ == '__main__':

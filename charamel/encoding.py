@@ -1,6 +1,6 @@
 """
-Charamel: Fast Universal Encoding Detection, Unicode-Flavoured 🍭
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+🌏 Charamel: Truly Universal Encoding Detection in Python 🌎
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Licensed under Apache 2.0
 """
