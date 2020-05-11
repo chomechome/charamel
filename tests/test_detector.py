@@ -95,7 +95,7 @@ def test_decode(detector, text, encoding):
 
 @pytest.mark.parametrize(
     ('content', 'expected'),
-    [b'\xc4\xe3\xba\xc3', {Encoding.GB_K, Encoding.GB_2312, Encoding.GB_18030}]
+    [(b'\xc4\xe3\xba\xc3', {Encoding.GB_K, Encoding.GB_2312, Encoding.GB_18030})],
 )
 def test_probe(detector, content, expected):
     probes = detector.probe(content)
