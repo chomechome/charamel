@@ -7,7 +7,7 @@ Licensed under Apache 2.0
 import pytest
 
 from charamel import Detector, Encoding
-from tests.fixtures import iter_fixtures, FIXTURE_DIRECTORY
+from tests.fixtures import FIXTURE_DIRECTORY, iter_fixtures
 from tests.utils import is_correct_encoding, skip
 
 
@@ -156,9 +156,7 @@ def _iter_fixtures_without_known_failures():
             yield path, encoding
 
 
-@pytest.mark.parametrize(
-    ('path', 'encoding'), _iter_fixtures_without_known_failures()
-)
+@pytest.mark.parametrize(('path', 'encoding'), _iter_fixtures_without_known_failures())
 def test_files(detector, path, encoding):
     with path.open('rb') as f:
         content = f.read()
