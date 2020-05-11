@@ -34,7 +34,7 @@
 Truly Universal Encoding Detection in Python
 ============================================
 
-**Charamel** is a universal character encoding library that supports **all** of `Python character encodings <https://docs.python.org/3.6/library/codecs.html#standard-encodings>`_.
+**Charamel** is a pure Python universal character encoding library that supports **all** of `Python character encodings <https://docs.python.org/3.6/library/codecs.html#standard-encodings>`_.
 The library is based on machine learning and trained to handle more than 60 languages.
 All that with no external dependencies. Ain't it sweet? 🍭
 
@@ -50,9 +50,10 @@ Installation
 Features
 --------
 
-* ⚡ ~39 ms per file
-* 🐍 `98 encodings <https://docs.python.org/3.6/library/codecs.html#standard-encodings>`_
-* 🌍 66 languages
+* 🌈 Powered by machine learning
+* ⚡ Faster than other pure Python libraries
+* 🐍 Supports all `98 Python encodings <https://docs.python.org/3.6/library/codecs.html#standard-encodings>`_
+* 🌍 Works on 60+ languages
 
 -----
 Usage
