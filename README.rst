@@ -51,6 +51,7 @@ Features
 --------
 
 * 🌈 Powered by machine learning
+* ✨ No dependencies
 * ⚡ Faster than other pure Python libraries
 * 🐍 Supports all `98 Python encodings <https://docs.python.org/3.6/library/codecs.html#standard-encodings>`_
 * 🌍 Works on 60+ languages
@@ -131,4 +132,4 @@ How to run this benchmark (requires Python 3.6+):
 It also produces a detailed breakdown of all represented encodings:
 
 .. raw:: html
-   :file: https://raw.githubusercontent.com/chomechome/charamel/master/docs/breakdown.html
+   :url: https://raw.githubusercontent.com/chomechome/charamel/master/docs/breakdown.html
