@@ -1,0 +1,18 @@
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+
+dist: xenial
+
+install:
+  - "pip install poetry==1.0.5"
+  - "poetry install --no-interaction --no-ansi"
+
+cache: pip
+
+script:
+  - "make lint"
+  - "make coverage"

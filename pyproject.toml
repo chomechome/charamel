@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "charamel"
+version = "1.0.0"
+description = "🌏 Truly Universal Encoding Detection in Python 🌎"
+authors = ["Vladislav Blinov <cunningplan@yandex.ru>"]
+repository = "https://github.com/chomechome/charamel"
+readme = "README.rst"
+license = "Apache-2.0"
+classifiers = [
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+chardet = {version = "^3.0.4", optional = true}
+cchardet = {version = "^2.1.6", optional = true}
+charset-normalizer = {version = "^1.3.4", optional = true}
+termcolor = {version = "^1.1.0", optional = true}
+tabulate = {version = "^0.8.7", optional = true}
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2.2"
+pytest-cov = "^2.8.1"
+mypy = "^0.740"
+flake8 = "^3.7.9"
+flake8-isort = "^2.7.0"
+flake8-builtins = "^1.4.1"
+flake8-comprehensions = "^3.0.1"
+flake8-debugger = "^3.2.1"
+flake8-eradicate = "^0.2.3"
+pep8-naming = "^0.9.0"
+black = "^19.10b0"
+isort = "^4.3.21"
+unify = "^0.5"
+pylint = "^2.4.3"
+codecov = "^2.0.15"
+
+[tool.poetry.extras]
+benchmark = ["chardet", "cchardet", "charset-normalizer", "termcolor", "tabulate"]
+
+[tool.black]
+line-length = 88
+target-version = ["py36"]
+exclude = "tests/fixtures"
+[build-system]
+requires = ["poetry>=1.0.5"]
+build-backend = "poetry.masonry.api"
+
