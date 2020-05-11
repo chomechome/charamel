@@ -19,6 +19,15 @@
     :target: https://travis-ci.org/chomechome/charamel
     :alt: TravisCI status
 
+.. image:: https://codecov.io/github/chomechome/charamel/coverage.svg?branch=master
+    :target: https://codecov.io/github/chomechome/charamel
+    :alt: Code coverage
+
+.. image:: https://codeclimate.com/github/chomechome/charamel/badges/gpa.svg?branch=master
+    :target: https://codeclimate.com/github/chomechome/charamel
+    :alt: Code quality
+
+
 ------------
 
 ============================================
