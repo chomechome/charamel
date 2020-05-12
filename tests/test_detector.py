@@ -8,7 +8,7 @@ import pytest
 
 from charamel import Detector, Encoding
 from tests.fixtures import FIXTURE_DIRECTORY, iter_fixtures
-from tests.utils import is_correct_encoding, skip
+from tests.utils import is_correct_encoding, skip, expectedly_fail
 
 
 @pytest.fixture(name='detector', scope='session')
@@ -69,6 +69,7 @@ def test_incorrect_min_confidence(min_confidence):
         ('你好', Encoding.GB_2312),
         ('你好', Encoding.GB_18030),
         ('你好', Encoding.GB_K),
+        ('김성식', Encoding.EUC_KR),
         ('привет', Encoding.CP_1251),
         ('привет', Encoding.KOI_8_R),
         ('привет', Encoding.KOI_8_U),
@@ -157,15 +158,15 @@ _KNOWN_FAILURES = {
 }
 
 
-def _iter_fixtures_without_known_failures():
+def _iter_fixtures_with_known_failures():
     for path, encoding in iter_fixtures():
         if path in _KNOWN_FAILURES:
-            yield skip(path, encoding, reason='Known detection failure')
+            yield expectedly_fail(path, encoding, reason='Known detection failure')
         else:
             yield path, encoding
 
 
-@pytest.mark.parametrize(('path', 'encoding'), _iter_fixtures_without_known_failures())
+@pytest.mark.parametrize(('path', 'encoding'), _iter_fixtures_with_known_failures())
 def test_files(detector, path, encoding):
     with path.open('rb') as f:
         content = f.read()

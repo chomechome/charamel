@@ -68,13 +68,27 @@ def is_correct_encoding(
 
 def skip(*values, reason: str = ''):
     """
-    Skip `pytest.mark.parametrize` test item
+    Mark `pytest.mark.parametrize` test item as skipped
 
     Args:
         values: Test item arguments
         reason: Reason to skip this item
 
     Returns:
-        Skipped test item
+        Marked test item
     """
     return pytest.param(*values, marks=pytest.mark.skip(reason=reason))
+
+
+def expectedly_fail(*values, reason: str = ''):
+    """
+    Mark `pytest.mark.parametrize` test item as expected to fail
+
+    Args:
+        values: Test item arguments
+        reason: Reason for the expected failure of this item
+
+    Returns:
+        Marked test item
+    """
+    return pytest.param(*values, marks=pytest.mark.xfail(reason=reason))

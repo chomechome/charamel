@@ -62,9 +62,13 @@ def load_biases(encodings: Sequence[Encoding]) -> Dict[Encoding, float]:
 
 def load_weights(encodings: Sequence[Encoding]) -> Dict[Encoding, List[float]]:
     """
+    Load encoding feature weights
 
-    :param encodings:
-    :return:
+    Args:
+        encodings: List of encodings
+
+    Returns:
+        Mapping from encodings to their feature weights
     """
     weights = {}
     for encoding in encodings:

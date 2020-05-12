@@ -61,6 +61,17 @@ To get multiple likely encodings along with confidences in range `[0, 1]`, use `
  (<Encoding.ISO_8859_3: 'iso8859_3'>, 0.9915028923264849)]
 ```
 
+As you can see, there are multiple encodings with very high confidences. They all can decode this text correctly:
+
+```python
+>>> content.decode(Encoding.ISO_8859_14)
+'El español o castellano del latín hablado'
+>>> content.decode(Encoding.CP_1258)
+'El español o castellano del latín hablado'
+>>> content.decode(Encoding.ISO_8859_3)
+'El español o castellano del latín hablado'
+```
+
 `Detector` can be configured to use a subset of encodings. Less possible encodings lead to faster detection:
 
 ```python
