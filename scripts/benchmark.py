@@ -313,7 +313,7 @@ def _create_encoding_accuracy_breakdown(hits: Dict[str, Dict[str, int]]) -> str:
             )
         breakdown.append(line)
 
-    return tabulate.tabulate(breakdown, headers, tablefmt='grid')
+    return tabulate.tabulate(breakdown, headers, tablefmt='github')
 
 
 def _create_detector_metrics(
@@ -354,7 +354,7 @@ def _create_detector_metrics(
             ]
         )
 
-    return tabulate.tabulate(breakdown, METRIC_HEADERS, tablefmt='grid')
+    return tabulate.tabulate(breakdown, METRIC_HEADERS, tablefmt='github')
 
 
 def _run_detectors(content: bytes, expected: str) -> Iterator[Tuple[str, float, bool]]:

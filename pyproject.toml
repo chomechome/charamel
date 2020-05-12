@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "🌏 Truly Universal Encoding Detection in Python 🌎"
 authors = ["Vladislav Blinov <cunningplan@yandex.ru>"]
 repository = "https://github.com/chomechome/charamel"
-readme = "README.rst"
+readme = "README.md"
 license = "Apache-2.0"
 classifiers = [
     "Programming Language :: Python :: 3.6",
