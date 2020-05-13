@@ -82,7 +82,7 @@ class Detector:
         features = _get_features(content).intersection(self._features)
         indices = [self._features[feature] for feature in features]
         for encoding, weights in self._weights.items():
-            scores[encoding] += sum(weights[index] for index in indices)
+            scores[encoding] += sum([weights[index] for index in indices])
         return scores
 
     def detect(self, content: bytes) -> Optional[Encoding]:
