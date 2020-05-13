@@ -86,6 +86,9 @@ def test_incorrect_min_confidence(min_confidence):
         ('поетів до дня поезії', Encoding.CP_1251),
         ('поетів до дня поезії', Encoding.KOI_8_U),
         ('¼ + ½', Encoding.UTF_8),
+        ('👍', Encoding.UTF_8),
+        ('\x000', Encoding.UTF_16),
+        ('<\xa0', Encoding.ISO_8859_7),
     ],
 )
 def test_decode(detector, text, encoding):

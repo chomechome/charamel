@@ -97,7 +97,7 @@ Below is the comparison between **Charamel** and other available Python encoding
 | [Chardet](https://github.com/chardet/chardet) v3.0.4                      |                    26 |            0.029259 |           0.416156 |           3.115    |        220 | 61%        | 97%                     |
 | [Cchardet](https://github.com/PyYoshi/cChardet) v2.1.6                    |                    40 |            0.000383 |           0.003913 |           0.062855 |      16811 | 67%        | 79%                     |
 | [Charset-Normalizer](https://github.com/Ousret/charset_normalizer) v1.3.4 |                    89 |            0.126674 |           0.502882 |           1.41848  |         51 | 77%        | 78%                     |
-| [Charamel v1.0.0](https://github.com/chomechome/charamel)                 |                    98 |            0.009053 |           0.04277  |           0.120667 |        712 | 97%        | 97%                     |
+| [Charamel](https://github.com/chomechome/charamel) v1.0.0                 |                    98 |            0.009053 |           0.04277  |           0.120667 |        712 | 97%        | 97%                     |
 
 
 How to run this benchmark (requires Python 3.6+):
