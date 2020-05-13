@@ -62,7 +62,7 @@ def is_correct_encoding(
     try:
         actual = content.decode(encoding)
         return normalize(actual) == normalize(expected)
-    except ValueError:
+    except (LookupError, UnicodeDecodeError):
         return False
 
 
