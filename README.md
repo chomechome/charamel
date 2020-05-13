@@ -38,7 +38,7 @@ API is centered around `Detector` class, with `detect` method being responsible 
 
 ```python
 >>> from charamel import Detector
->>> detector = Detector()
+>>> detector = Detector()  # takes ~0.7 sec to create the first one
 >>> content = b'El espa\xf1ol o castellano del lat\xedn hablado'
 >>> detector.detect(content)
 <Encoding.ISO_8859_14: 'iso8859_14'>

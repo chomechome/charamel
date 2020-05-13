@@ -35,7 +35,7 @@ def _apply_sigmoid(value: float) -> float:
 
 class Detector:
     """
-    Universal encoding detector
+    Detects all character encodings available in Python
     """
 
     def __init__(

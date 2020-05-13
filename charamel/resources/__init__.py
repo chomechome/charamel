@@ -4,6 +4,7 @@
 
 Licensed under Apache 2.0
 """
+import functools
 import gzip
 import pathlib
 import struct
@@ -30,6 +31,38 @@ def _unpack(file: pathlib.Path, pattern: str) -> List[Any]:
         return [values[0] for values in struct.iter_unpack(pattern, data.read())]
 
 
+@functools.lru_cache(maxsize=None)
+def _load_biases() -> Dict[str, float]:
+    """
+    Load all linear model bias values
+
+    Returns:
+        Mapping from encoding names to their biases
+    """
+    biases = {}
+    with gzip.open(RESOURCE_DIRECTORY / 'biases.gzip', 'rb') as data:
+        for line in data:
+            encoding, bias = line.decode().split()
+            biases[encoding] = float(bias)
+
+    return biases
+
+
+@functools.lru_cache(maxsize=len(Encoding))
+def _load_weights(encoding: Encoding) -> List[float]:
+    """
+    Load feature weights for a single encodings
+
+    Args:
+        encoding: Character encoding
+
+    Returns:
+        List of encoding feature weights
+    """
+    return _unpack(WEIGHT_DIRECTORY / f'{encoding}.gzip', pattern='>e')
+
+
+@functools.lru_cache(maxsize=None)
 def load_features() -> Dict[int, int]:
     """
     Load byte-level feature names and indices
@@ -51,26 +84,18 @@ def load_biases(encodings: Sequence[Encoding]) -> Dict[Encoding, float]:
     Returns:
         Mapping from encodings to their biases
     """
-    biases = {}
-    with gzip.open(RESOURCE_DIRECTORY / 'biases.gzip', 'rb') as data:
-        for line in data:
-            encoding, bias = line.decode().split()
-            biases[encoding] = float(bias)
-
+    biases = _load_biases()
     return {encoding: biases[encoding] for encoding in encodings}
 
 
 def load_weights(encodings: Sequence[Encoding]) -> Dict[Encoding, List[float]]:
     """
-    Load encoding feature weights
+    Load feature weights for specified encodings
 
     Args:
         encodings: List of encodings
 
     Returns:
-        Mapping from encodings to their feature weights
+        Mapping from encoding to its feature weights
     """
-    weights = {}
-    for encoding in encodings:
-        weights[encoding] = _unpack(WEIGHT_DIRECTORY / f'{encoding}.gzip', pattern='>e')
-    return weights
+    return {encoding: _load_weights(encoding) for encoding in encodings}

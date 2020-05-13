@@ -369,6 +369,7 @@ def main():
     """
     Run benchmark on all test fixtures
     """
+
     logging.basicConfig(format='%(message)s', level=logging.INFO, stream=sys.stdout)
     warnings.simplefilter('ignore', UserWarning)
 
