@@ -378,6 +378,9 @@ def main():
     LOGGER.info(DOUBLE_LINE)
 
     fixtures = list(iter_fixtures())
+
+    LOGGER.info('Tests: %s', len(fixtures))
+
     sizes = []
     times = collections.defaultdict(list)
     hits = collections.defaultdict(collections.Counter)
